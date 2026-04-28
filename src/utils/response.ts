@@ -80,13 +80,13 @@ export default {
     });
   },
 
-  unauthorized(res: Response, message = "Unauthorized") {
+  unauthorized(res: Response, message: string) {
     res.status(401).json({
       meta: {
-        status: "error",
+        status: "unauthorized",
         message,
-        timestamp: new Date().toISOString(),
       },
+      data: null,
     });
   },
 

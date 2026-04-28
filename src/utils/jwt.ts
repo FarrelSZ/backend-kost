@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import { SECRET } from "./env";
+import { IUserToken } from "./interface";
 
-export const generateToken = (payload: string) => {
+export const generateToken = (payload: IUserToken) => {
   const token = jwt.sign(payload, SECRET, {
     expiresIn: "2d",
   });
@@ -9,6 +10,6 @@ export const generateToken = (payload: string) => {
 };
 
 export const verifyToken = (token: string) => {
-  const user = jwt.verify(token, SECRET);
+  const user = jwt.verify(token, SECRET) as IUserToken;
   return user;
 };

@@ -20,7 +20,7 @@ const validatePassword = Yup.string()
   });
 
 export const userLoginDTO = Yup.object({
-  identifier: Yup.string().required(),
+  email: Yup.string().email().required(),
   password: validatePassword,
 });
 
@@ -46,6 +46,8 @@ export interface IUser extends Document {
   phone: string;
   password: string;
   role: ROLES;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // ─── Mongoose Schema ──────────────────────────────────────────────────────────
