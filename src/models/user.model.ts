@@ -29,6 +29,11 @@ export const userUpdatePasswordDTO = Yup.object({
   newPassword: validatePassword,
 });
 
+export const userUpdateDTO = Yup.object({
+  name: Yup.string(),
+  phone: Yup.string(),
+});
+
 export const userDTO = Yup.object({
   name: Yup.string().required(),
   email: Yup.string().email().required(),
