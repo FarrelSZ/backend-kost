@@ -50,15 +50,6 @@ export default {
     }
   },
 
-  async me(req: IReqUser, res: Response) {
-    try {
-      const result = await UserModel.findById(req.user?.id);
-      response.success(res, result, "Berhasil mendapatkan profil user");
-    } catch (error) {
-      response.error(res, error, "Gagal mendapatkan profil user");
-    }
-  },
-
   async updatePassword(req: IReqUser, res: Response) {
     try {
       const userId = req.user?.id;
