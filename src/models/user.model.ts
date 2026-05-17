@@ -34,6 +34,14 @@ export const userUpdateDTO = Yup.object({
   phone: Yup.string(),
 });
 
+export const userCreateByOwnerDTO = Yup.object({
+  name: Yup.string().required(),
+  email: Yup.string().email().required(),
+  phone: Yup.string().required(),
+  password: validatePassword,
+  role: Yup.string().oneOf([ROLES.MANAGER, ROLES.CASHIER]).required(),
+});
+
 export const userDTO = Yup.object({
   name: Yup.string().required(),
   email: Yup.string().email().required(),
