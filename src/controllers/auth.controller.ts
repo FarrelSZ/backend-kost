@@ -3,7 +3,7 @@ import { IReqUser } from "../utils/interface";
 import UserModel, { userDTO, userLoginDTO, userUpdatePasswordDTO } from "../models/user.model";
 import response from "../utils/response";
 import bcrypt from "bcrypt";
-import { generateRefreshToken, generateToken, verifyRefreshToken } from "../utils/jwt";
+import { generateRefreshToken, generateToken, verifyRefreshToken, verifyToken } from "../utils/jwt";
 import { encrypt } from "../utils/encryption";
 import redis from "../utils/redis";
 
@@ -103,6 +103,25 @@ export default {
           // Token sudah expired/invalid, tetap lanjut hapus cookie
         }
       }
+
+      // Blacklist access token agar tidak bisa dipakai lagi sampai expired
+      const authHeader = req.headers.authorization;
+      if (authHeader?.startsWith("Bearer ")) {
+        const accessToken = authHeader.split(" ")[1];
+        try {
+          const payload = verifyToken(accessToken);
+          const exp = (payload as any).exp;
+          if (exp) {
+            const ttl = exp - Math.floor(Date.now() / 1000);
+            if (ttl > 0) {
+              await redis.set(`blacklist:${accessToken}`, "1", { EX: ttl });
+            }
+          }
+        } catch {
+          // Token sudah invalid, tidak perlu di-blacklist
+        }
+      }
+
       res.clearCookie("refreshToken");
       response.success(res, null, "Logout berhasil");
     } catch (error) {
