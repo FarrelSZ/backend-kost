@@ -11,8 +11,8 @@ export interface IReqUser extends Request {
   user?: IUserToken;
 }
 
-export type Pagination = {
-  totalPages: number;
-  current: number;
-  total: number;
-};
+export interface IPaginationQuery {
+  page: number;
+  limit: number;
+  search?: string;
+}
