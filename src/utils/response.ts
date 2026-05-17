@@ -1,7 +1,12 @@
 import { Response } from "express";
-import { Pagination } from "./interface";
 import * as Yup from "yup";
 import mongoose from "mongoose";
+
+type Pagination = {
+  totalPages: number;
+  current: number;
+  total: number;
+};
 
 export default {
   success(res: Response, data: any, message: string) {
@@ -39,14 +44,17 @@ export default {
 
   error(res: Response, error: unknown, message: string) {
     if (error instanceof Yup.ValidationError) {
+      const errors =
+        error.inner.length > 0
+          ? Object.fromEntries(error.inner.map((e) => [e.path, e.message]))
+          : { [error.path ?? "value"]: error.errors[0] };
+
       return res.status(400).json({
         meta: {
           status: 400,
           message,
         },
-        data: {
-          [`${error.path}`]: error.errors[0],
-        },
+        data: errors,
       });
     }
 
